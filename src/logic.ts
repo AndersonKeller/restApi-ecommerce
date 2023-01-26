@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { ids, orders } from './database'
 import { IWorkOrder, IWorkOrderRequest, WorkOrderRequiredKeyes } from './interfaces'
 
@@ -64,4 +64,32 @@ const listWorkOrder = (request: Request, response: Response): Response => {
     return response.json(orders)
 }
 
-export { createWorkOrder, listWorkOrder }
+const retrieveWorkOrder = (request: Request, response: Response): Response => {
+
+    const indexWorkOrder: number = request.workOrder.indexWorkOrder
+
+    return response.json(orders[indexWorkOrder])
+
+}
+
+const deleteWorkOrder = (request: Request, response: Response): Response => {
+
+    const indexWorkOrder: number = request.workOrder.indexWorkOrder
+
+    orders.splice(indexWorkOrder, 1)
+
+    return response.status(204).send()
+
+}
+
+const updateWorkOrder = (request: Request, response: Response): Response => {
+
+    const indexWorkOrder: number = request.workOrder.indexWorkOrder
+
+    orders[indexWorkOrder] = { ...orders[indexWorkOrder], ...request.body }
+
+    return response.json(orders[indexWorkOrder])
+
+}
+
+export { createWorkOrder, listWorkOrder, retrieveWorkOrder, deleteWorkOrder, updateWorkOrder }
