@@ -62,10 +62,10 @@ const createWorkOrderFormat = async (request: Request, response: Response): Prom
 
 const listWorkOrder = async (request: Request, response: Response): Promise<Response> => {
 
-    const per_page = request.query.per_page === undefined ? 10 : request.query.per_page
-    let page = request.query.page === undefined ? 0 : request.query.per_page
+    const perPage: any = request.query.perPage === undefined ? 10 : request.query.perPage
+    let page: any = request.query.page === undefined ? 0 : request.query.page
 
-    console.log(page, per_page)
+    page = page * perPage
 
     const queryString: string = `
         SELECT
@@ -77,7 +77,7 @@ const listWorkOrder = async (request: Request, response: Response): Promise<Resp
 
     const queryConfig: QueryConfig = {
         text: queryString,
-        values: [per_page, page]
+        values: [perPage, page]
     }
 
     const queryResult: WorkOrderResult = await client.query(queryConfig)
