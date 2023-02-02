@@ -1,6 +1,6 @@
 import express, { Application } from 'express'
 import { startDatabase } from './database'
-import { createWorkOrder, createWorkOrderFormat, deleteWorkOrder, listWorkOrder, retrieveWorkOrder, updateWorkOrder } from './logic'
+import { createWorkOrder, createWorkOrderFormat, deleteWorkOrder, listWorkOrder, retrieveWorkOrder, updatePartialWorkOrder, updateWorkOrder } from './logic'
 import { ensureWorkOrderExists } from './middlewares'
 
 const app: Application = express()
@@ -12,6 +12,7 @@ app.get('/work-order', listWorkOrder)
 app.get('/work-order/:id', ensureWorkOrderExists, retrieveWorkOrder)
 app.delete('/work-order/:id', ensureWorkOrderExists, deleteWorkOrder)
 app.put('/work-order/:id', ensureWorkOrderExists, updateWorkOrder)
+app.patch('/work-order/:id', ensureWorkOrderExists, updatePartialWorkOrder)
 
 app.listen(3000, async () => {
     await startDatabase()

@@ -12,6 +12,7 @@ interface IWorkOrder extends IWorkOrderRequest {
     startdate: Date
     enddate: Date
     id: number
+    count?: string
 }
 
 type WorkOrderResult = QueryResult<IWorkOrder>

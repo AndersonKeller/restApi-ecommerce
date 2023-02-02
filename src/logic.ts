@@ -7,13 +7,38 @@ import { IWorkOrder, IWorkOrderRequest, WorkOrderCreate, WorkOrderResult } from 
 const createWorkOrder = async (request: Request, response: Response): Promise<Response> => {
     
     const orderDataRequest: IWorkOrderRequest = request.body
+
+    let queryString: string = `
+        SELECT
+            COUNT(*)
+        FROM
+            work_orders
+        WHERE
+            mechanical = $1 AND startdate = $2;
+    `
+
+    let queryConfig: QueryConfig = {
+        text: queryString,
+        values: [orderDataRequest.mechanical, new Date()]
+    }
+
+    let queryResult: WorkOrderResult = await client.query(queryConfig)
+
+    console.log(queryResult)
+
+    if(Number(queryResult.rows[0].count) > 2){
+        return response.status(400).json({
+            message: 'Many service orders registered!'
+        })
+    }
+
     const orderData: WorkOrderCreate = {
         ...orderDataRequest,
         startdate: new Date(),
         enddate: new Date(Date.now() + 86400 * 1000)
     }
 
-    const queryString: string = `
+    queryString = `
         INSERT INTO
             work_orders(description, mechanical, price, status, iswarranty, startdate, enddate)
         VALUES
@@ -21,14 +46,12 @@ const createWorkOrder = async (request: Request, response: Response): Promise<Re
         RETURNING *;
     `
 
-    const queryConfig: QueryConfig = {
+    queryConfig = {
         text: queryString,
         values: Object.values(orderData)
     }
 
-    console.log(queryConfig)
-
-    const queryResult: WorkOrderResult = await client.query(queryConfig)
+    queryResult = await client.query(queryConfig)
     const newWorkOrder: IWorkOrder = queryResult.rows[0]
     
     return response.status(201).json(newWorkOrder)
@@ -159,11 +182,46 @@ const updateWorkOrder = async (request: Request, response: Response): Promise<Re
 
 }
 
+const updatePartialWorkOrder = async (request: Request, response: Response): Promise<Response> => {
+
+    if(request.body.id){
+        return response.status(400).json({
+            message: 'Erro updating id'
+        })
+    }
+
+    const id: number = parseInt(request.params.id)
+    const orderData = Object.values(request.body)
+    const orderKeys = Object.keys(request.body)
+
+    const formatString: string = format(`
+        UPDATE
+            work_orders
+        SET(%I) = ROW(%L)
+        WHERE
+            id = $1
+        RETURNING *;
+    `,
+        orderKeys,
+        orderData
+    )
+
+    const queryConfig: QueryConfig = {
+        text: formatString,
+        values: [id]
+    }
+
+    const queryResult: WorkOrderResult = await client.query(queryConfig)
+
+    return response.json(queryResult.rows[0])
+}
+
 export {
     createWorkOrder,
     createWorkOrderFormat,
     listWorkOrder,
     retrieveWorkOrder,
     deleteWorkOrder,
-    updateWorkOrder
+    updateWorkOrder,
+    updatePartialWorkOrder
 }
