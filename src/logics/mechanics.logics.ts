@@ -1,6 +1,6 @@
 import { query, Request, Response } from 'express'
 import format from 'pg-format'
-import { AddressResult, IAddressRequest, IMechanicalRequest, MechanicalAddressResult, MechanicalResult } from '../interfaces/interfaces'
+import { AddressResult, IAddressRequest, IMechanicalRequest, MechanicalAddressResult, MechanicalResult } from '../interfaces/mechanics.interfaces'
 import { client } from '../database'
 import { QueryConfig } from 'pg'
 
