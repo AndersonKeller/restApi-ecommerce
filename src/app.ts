@@ -2,7 +2,7 @@ import express, { Application } from 'express'
 import { startDatabase } from './database'
 import { createMechanical, createMechanicalAddress, retrieveMechanical } from './logics/mechanics.logics'
 import { ensureMechanicalExists } from './middlewares/mechanicals.middlewares'
-import { createWorkOrders, finishWorkOrders, listWorkOrders } from './logics/workOrders.logics'
+import { createPartsInWorkOrder, createWorkOrders, finishWorkOrders, listWorkOrderParts, listWorkOrders } from './logics/workOrders.logics'
 
 const app: Application = express()
 app.use(express.json())
@@ -14,6 +14,9 @@ app.get('/mechanics/:id', ensureMechanicalExists, retrieveMechanical)
 app.post('/workOrders', createWorkOrders)
 app.get('/workOrders', listWorkOrders)
 app.patch('/workOrders/:id/finish', finishWorkOrders)
+app.post('/workOrders/:id/parts', createPartsInWorkOrder)
+app.get('/workOrders/:id/parts', listWorkOrderParts)
+
 
 app.listen(3000, async () => {
     console.log('Server is running!')

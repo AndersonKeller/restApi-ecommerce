@@ -38,3 +38,33 @@ ADD COLUMN
 ALTER TABLE
 	work_orders
 ADD FOREIGN KEY ("mechanicalId") REFERENCES mechanics("id");
+
+CREATE TABLE IF NOT EXISTS parts(
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(30) NOT NULL UNIQUE,
+	"fabricationDate" DATE NOT NULL,
+	"expirationDate" DATE NOT NULL,
+	"quantityInStock" INTEGER NOT NULL,
+	"price" DECIMAL(10,2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS work_order_parts (
+	"id" SERIAL PRIMARY KEY,
+	"workOrderId" INTEGER NOT NULL,
+	FOREIGN KEY ("workOrderId") REFERENCES work_orders("id")
+	ON DELETE CASCADE,
+	"partId" INTEGER NOT NULL,
+	FOREIGN KEY ("partId") REFERENCES parts("id")
+	ON DELETE RESTRICT,
+	"quantity" INTEGER NOT NULL
+);
+
+INSERT INTO
+	parts ("name", "fabricationDate", "expirationDate", "quantityInStock", "price")
+VALUES
+	('Oleo 1 litro', '2023-01-01', '2025-01-01', 5, 80.00),
+	('Oleo 2 litro', '2023-01-01', '2025-01-01', 5, 130.00),
+	('Pneus aro 17', '2023-01-01', '2025-01-01', 12, 400.00),
+	('Pneus aro 15', '2023-01-01', '2025-01-01', 12, 350.00),
+	('Pinça de freio', '2023-01-01', '2025-01-01', 6, 80.00),
+	('Disco de freio', '2023-01-01', '2025-01-01', 5, 150.00);

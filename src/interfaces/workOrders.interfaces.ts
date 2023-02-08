@@ -23,13 +23,28 @@ interface IWorkOrderFinish {
     endDate: Date
 }
 
+interface IWorkOrderPartsRequest {
+    name: string,
+	quantity: number
+}
+
+interface IWorkOrderParts {
+    id: number,
+    workOrderId: number,
+    partId: number,
+    quantity: number
+}
+
 type WorkOrderResult = QueryResult<IWorkOrder>
 type WorkOrderMechanicalResult = QueryResult<IWorkOrderMechanical>
+type WorkOrderPartsResult = QueryResult<IWorkOrderParts>
 
 export {
     IWorkOrder,
     IWorkOrderRequest,
     WorkOrderResult,
     WorkOrderMechanicalResult,
-    IWorkOrderFinish
+    IWorkOrderFinish,
+    WorkOrderPartsResult,
+    IWorkOrderPartsRequest
 }
