@@ -3,6 +3,7 @@ import { client } from '../../database'
 import format from 'pg-format'
 import { QueryConfig, QueryResult } from 'pg'
 import { AppError } from '../../errors'
+import { createUserSchema, returnUserSchemaWithoutPassword } from '../../schemas/users.schemas'
 
 const createUsersService = async (userData: IUserRequest): Promise<IUserWithoutPassword> => {
 
@@ -31,15 +32,19 @@ const createUsersService = async (userData: IUserRequest): Promise<IUserWithoutP
             INSERT INTO
                 users(%I)
             VALUES(%L)
-            RETURNING id, name, email, role;
+            RETURNING *;
         `,
         Object.keys(userData),
         Object.values(userData)
     )
 
     const queryResult: IUserResult = await client.query(queryString)
+    
+    console.log(queryResult.rows[0])
+    const newUser = returnUserSchemaWithoutPassword.parse(queryResult.rows[0])
+    console.log(newUser)
 
-    return queryResult.rows[0]
+    return newUser
 }
 
 export default createUsersService
