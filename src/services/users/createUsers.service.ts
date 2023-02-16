@@ -4,6 +4,7 @@ import format from 'pg-format'
 import { QueryConfig, QueryResult } from 'pg'
 import { AppError } from '../../errors'
 import { createUserSchema, returnUserSchemaWithoutPassword } from '../../schemas/users.schemas'
+import { hash } from 'bcryptjs'
 
 const createUsersService = async (userData: IUserRequest): Promise<IUserWithoutPassword> => {
 
@@ -39,10 +40,8 @@ const createUsersService = async (userData: IUserRequest): Promise<IUserWithoutP
     )
 
     const queryResult: IUserResult = await client.query(queryString)
-    
-    console.log(queryResult.rows[0])
+
     const newUser = returnUserSchemaWithoutPassword.parse(queryResult.rows[0])
-    console.log(newUser)
 
     return newUser
 }
