@@ -8,11 +8,11 @@ const userSchema = z.object({
         return hashSync(pass, 10)
     }),
     //TODO: Precisa corrigir o date
-    birthDate: z.preprocess((field) => {
-        if(typeof field == 'string' || field instanceof Date) {
-            return new Date(field)
+    birthDate: z.preprocess((date) => {
+        if(typeof date == 'string' || date instanceof Date){
+            return new Date(date)
         }
-    }, z.date().or(z.string())).optional().nullable()
+    }, z.date().or(z.string()) ).optional().nullable()
 })
 
 const userUpdateSchema = userSchema.partial()
