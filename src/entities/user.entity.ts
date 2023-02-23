@@ -23,7 +23,7 @@ class User {
     password: string
 
     @Column({ type: 'date', nullable: true })
-    birthDate: string
+    birthDate?: string | undefined | null | Date
 
     @CreateDateColumn()
     createdAt: string
