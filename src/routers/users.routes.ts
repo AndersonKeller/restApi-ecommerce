@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   createUserController,
   deleteUserController,
-  listUsersController,
+  listUserController,
   updateUserController,
 } from "../controllers/users.controllers";
 import ensureDataIsValidMiddleware from "../middlewares/ensureDataIsValid.middleware";
@@ -16,7 +16,7 @@ userRoutes.post(
   ensureDataIsValidMiddleware(userSchema),
   createUserController
 );
-userRoutes.get("", listUsersController);
+userRoutes.get("/users", listUserController);
 userRoutes.delete("/:id", ensureUserExistsMiddleware, deleteUserController);
 userRoutes.patch(
   "/:id",
