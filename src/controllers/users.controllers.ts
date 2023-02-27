@@ -17,7 +17,8 @@ const createUserController = async (req: Request, res: Response) => {
 
 const listUsersController = async (req: Request, res: Response) => {
 
-    const users = await listUsersService()
+    console.log(req.headers.authorization);
+    const users = await listUsersService(req.headers.authorization!)
 
     return res.json(users)
 
