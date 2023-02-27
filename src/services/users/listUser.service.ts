@@ -25,7 +25,6 @@ const listUserService = async (authorization:string): Promise<IUserReturn> => {
         throw new AppError("User not found", 400);
     }
     const user = returnUserSchema.parse(findUser)
-    console.log(findUser);
     return user
 }
 
